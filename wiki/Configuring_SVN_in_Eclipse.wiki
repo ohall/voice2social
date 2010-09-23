@@ -12,5 +12,5 @@ In Eclipse:
   * Go to File > New > Other > SVN
   * select 'Checkout Projects' from SVN, click next
   * select 'Create a new Repository Location'
-  * input this url:   http://code.google.com/p/voice2social/
+  * input this url: https://voice2social.googlecode.com/svn/
   * click 'Next' , leave the default checkout settings and click 'Finish'
