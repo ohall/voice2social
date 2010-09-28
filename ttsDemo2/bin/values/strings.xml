@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">This is T T S Demo2 app, press the button below to make it speak the contents of this EditText widget!</string>
+    <string name="button_text">Speak!</string>
+    <string name="app_name">ttsDemo2</string>
+</resources>
