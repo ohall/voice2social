@@ -87,12 +87,15 @@ public class record extends Activity {
     	if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
         	
         	TextView speechText = (TextView) findViewById(R.id.text);
+        	speechText.setTextSize(75);
         	ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
         	
         	//append each word match to text view
         	for(int i = 0; i<matches.size();i++){
         		speechText.append(" "+matches.get(i));
         	}
+        	
+        	
         	
         	
         	
