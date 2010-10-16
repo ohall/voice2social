@@ -4,23 +4,23 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
     
-    <TextView
+    <TextView android:id="@+id/onAirTextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="4dip"
-        android:text="Speech Recognition Demo" />
+        android:text="Record a post for " />
         
-    <Button android:id="@+id/button"
+    <Button android:id="@+id/onAirRecordButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Speak" />
         
-    <ListView android:id="@+id/list"
+    <ListView android:id="@+id/onAirListView"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1" />
         
-    <TextView android:id="@+id/text"
+    <TextView android:id="@+id/onAirRecordedText"
     	android:layout_width ="fill_parent"
     	android:layout_height="wrap_content"/>
    
