@@ -71,38 +71,36 @@ public class mainMenu extends Activity {
 	    	}
 	    });
 	    
-    	
-
-
-        }
+    }//end onCreate
     
 
 	private void launchActivity(int activity) {
 	
-		Intent reviewAndSendIntent = null;
+		Intent intent = null;
 	
 		switch(activity){
 		
 			case 1:
-				reviewAndSendIntent = new Intent(this , mediaSelect.class);
+				intent = new Intent(this , mediaSelect.class);
 				break;
 			case 2:
-				reviewAndSendIntent = new Intent(this , onAir.class);
+				intent = new Intent(this , onAir.class);
 				break;
 			case 3:
-				reviewAndSendIntent = new Intent(this , newUserLogin.class);
+				intent = new Intent(this , newUserLogin.class);
 				break;
 			case 4:
-				reviewAndSendIntent = new Intent(this , reviewAndSend.class);
+				intent = new Intent(this , reviewAndSend.class);
 				break;
 			case 5:
-				reviewAndSendIntent = new Intent(this , viewFriends.class);
+				intent = new Intent(this , viewFriends.class);
 				break;
 				
-		}
+		}//end switch
 		
-		startActivity(reviewAndSendIntent);
-	}
+		startActivity(intent);
+	
+	}//end launchActivity
 
 	
 	
