@@ -10,7 +10,31 @@
     android:text="@string/hello"
     />
     
-<Button
+	<Button
+	android:id = "@+id/mediaSelectButton"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Media Select"
+	/>
+	<Button
+	android:id = "@+id/newUserLoginButton"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="New User Login"
+	/>
+	<Button
+	android:id = "@+id/onAirButton"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="On Air"
+	/>
+	<Button
+	android:id = "@+id/viewFriends"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="View Friends"
+	/>
+	<Button
 	android:id = "@+id/reviewAndSendButton"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
