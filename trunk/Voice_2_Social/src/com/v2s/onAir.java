@@ -14,9 +14,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 public class onAir extends Activity {
     
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
+    private Button speakButton;
+    private Bundle recordingResultsBundle;
     
     //private ListView mList;
 
@@ -29,7 +32,13 @@ public class onAir extends Activity {
         
         setContentView(R.layout.onair);
 
-        Button speakButton = (Button) findViewById(R.id.button);
+        speakButton = (Button) findViewById(R.id.onAirRecordButton);
+        
+        Bundle incomingBundle = this.getIntent().getExtras();
+        String networkSelected = incomingBundle.getString("DEFAULTTEXT");
+        
+        TextView onAirTextView = (TextView) findViewById(R.id.onAirTextView);
+        onAirTextView.append(networkSelected);
         
    
 
@@ -50,21 +59,6 @@ public class onAir extends Activity {
         }
     }
     
-//    public void onResults(){
-//    	
-//    	TextView speechText = (TextView) findViewById(R.id.text);
-//    	
-//    	speechText = getStringArrayList(RESULT_RECOGNITION);
-//    	
-//    }
-
-    /**
-     * Handle the click on the start recognition button.
-     */
-//    public void onClick(View v) {
-//        
-//            
-//    }
 
     /**
      * Fire an intent to start the speech recognition activity.
@@ -85,27 +79,40 @@ public class onAir extends Activity {
         
     	if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
         	
-        	TextView speechText = (TextView) findViewById(R.id.text);
+        	TextView speechText = (TextView) findViewById(R.id.onAirRecordedText);
         	speechText.setTextSize(75);
         	ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
         	
         	//append each word match to text view
         	for(int i = 0; i<matches.size();i++){
-        		speechText.append(" "+matches.get(i));
-        	}
+        		//speechText.append(" "+matches.get(i));
+        		speechText.setText(matches.get(i));
+        	}	
         	
+        	recordingResultsBundle = new Bundle();
+        	recordingResultsBundle.putString("DEFAULTTEXT", speechText.getText().toString());
         	
-        	
-        	
-        	
-        	
-            // Fill the list view with the strings the recognizer thought it could have heard
-//            ArrayList<String> matches = data.getStringArrayListExtra(
-//                    RecognizerIntent.EXTRA_RESULTS);
-//            mList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-//                    matches));
+        	speakButton.setText("Review and Post Recording");
+        	speakButton.setOnClickListener(new OnClickListener() {
+                public void onClick(View view) {
+                    // Start new activity
+                	goToReviewAndSendActivity();
+                }
+                
+            });
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+    	
+    	private void goToReviewAndSendActivity() {
+    		Intent i = new Intent(this , reviewAndSend.class);
+    		i.putExtras(recordingResultsBundle);
+    		startActivity(i);
+    		
+
+        }
+    	
+    	
 }
