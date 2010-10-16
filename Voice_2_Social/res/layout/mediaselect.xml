@@ -9,13 +9,25 @@
         android:layout_height="wrap_content"
         android:text="Media Select" />
         
-    <Button android:id="@+id/button1"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accept" />
-    <Button android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:text="Please select the network you would like to update" />
+        
+        
+    <Button android:id="@+id/twitterButton"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Record Again" />
+        android:text="Twitter" />
+        
+    <Button android:id="@+id/fbButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Facebook" />
+        
+    <Button android:id="@+id/buzzButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Google Buzz" />
 
  </LinearLayout>
