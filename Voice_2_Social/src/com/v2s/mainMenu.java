@@ -24,8 +24,8 @@ public class mainMenu extends Activity {
         Button newUserLoginButton = 
         	(Button) findViewById(R.id.newUserLoginButton);
         
-        Button onAirButton = 
-        	(Button) findViewById(R.id.onAirButton);
+//        Button onAirButton = 
+//        	(Button) findViewById(R.id.onAirButton);
         
         Button viewFriends = 
         	(Button) findViewById(R.id.viewFriends);
@@ -43,12 +43,12 @@ public class mainMenu extends Activity {
 	    	}
 	    });
     	
-        onAirButton.setOnClickListener(new OnClickListener() {
-	    	public void onClick(View view){
-	    		//start review and send activity
-	    		launchActivity(2);
-	    	}
-	    });
+//        onAirButton.setOnClickListener(new OnClickListener() {
+//	    	public void onClick(View view){
+//	    		//start review and send activity
+//	    		launchActivity(2);
+//	    	}
+//	    });
         
         newUserLoginButton.setOnClickListener(new OnClickListener() {
 	    	public void onClick(View view){
@@ -90,7 +90,10 @@ public class mainMenu extends Activity {
 				intent = new Intent(this , newUserLogin.class);
 				break;
 			case 4:
+				Bundle b = new Bundle();
+				b.putString("DEFAULTTEXT","ATTENTION DEVELOPER!  NO TEXT INPUT IF SELECTED FROM MAIN MENU!!");
 				intent = new Intent(this , reviewAndSend.class);
+				intent.putExtras(b);
 				break;
 			case 5:
 				intent = new Intent(this , viewFriends.class);
