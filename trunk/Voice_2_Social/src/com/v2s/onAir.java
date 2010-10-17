@@ -32,12 +32,16 @@ public class onAir extends Activity {
         
         setContentView(R.layout.onair);
 
-        speakButton = (Button) findViewById(R.id.onAirRecordButton);
+        
+        
+        speakButton = (Button) findViewById(R.id.onAirRecordButton);  
+        speakButton.setTextSize(30);
         
         Bundle incomingBundle = this.getIntent().getExtras();
         String networkSelected = incomingBundle.getString("DEFAULTTEXT");
         
         TextView onAirTextView = (TextView) findViewById(R.id.onAirTextView);
+        onAirTextView.setTextSize(25);
         onAirTextView.append(networkSelected);
         
    
@@ -80,14 +84,16 @@ public class onAir extends Activity {
     	if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
         	
         	TextView speechText = (TextView) findViewById(R.id.onAirRecordedText);
-        	speechText.setTextSize(75);
+        	speechText.setTextSize(20);
         	ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
         	
         	//append each word match to text view
         	for(int i = 0; i<matches.size();i++){
         		//speechText.append(" "+matches.get(i));
-        		speechText.setText(matches.get(i));
+        		speechText.setText(" "+matches.get(i));
         	}	
+        	
+        	speechText.setTextSize(20);
         	
         	recordingResultsBundle = new Bundle();
         	recordingResultsBundle.putString("DEFAULTTEXT", speechText.getText().toString());
