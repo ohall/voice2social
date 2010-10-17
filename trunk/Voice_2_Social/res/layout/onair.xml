@@ -13,7 +13,7 @@
     <Button android:id="@+id/onAirRecordButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Speak" />
+        android:text="Press to Record" />
         
     <ListView android:id="@+id/onAirListView"
         android:layout_width="fill_parent"
