@@ -115,11 +115,11 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 	
 	private void startVoiceRecognitionActivity() {
 		
-    	Intent commandIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+    //	Intent commandIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    //    commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+    //            RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         //commandIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech recognition demo");
-        startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
+    //    startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 	
 	
