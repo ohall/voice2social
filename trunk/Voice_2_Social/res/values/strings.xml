@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <string name="app_name">v2s</string><string name="hello">mainMenu!</string>
+
+    <string name="app_name">v2s</string>
+    <string name="pageTitleMain">Main Menu</string>
+   	<string name="selectMedia">Select the social network you would like to post to.</string>
+   	<string name="reviewAndSendIntructions">To post, press ACCEPT.  Otherwise edit manually or re-record.</string>	
+    <string name="twitter">Twitter</string>
+    <string name="facebook">Facebook </string>
+    <string name="buzz">Buzz</string>
+    <string name="recordCaps">RECORD</string>
+    <string name="menuLabel">MENU</string>
+    <string name="sendLabel">SEND</string>
+    <string name="editLabel">EDIT</string>
+    <string name="reRecordLabel">RE-RECORD</string>
     
 </resources>
