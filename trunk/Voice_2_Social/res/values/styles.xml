@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CodeFont" parent="@android:style/TextAppearance.Medium">
+            <item name="android:layout_width">fill_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+            <item name="android:background">#FFFF00</item>
+            <item name="android:textColor">#FF0000</item>        
+            <item name="android:typeface">sans</item>    
+    </style>
+    <style name="Title">
+  			<item name="android:textSize">30sp</item>
+  			<item name="android:typeface">serif</item>
+			<item name="android:textColor">@color/title</item>
+	</style>
+	<style name="Button">
+    	  <item name="android:textSize">20sp</item>
+      	<item name="android:padding">10px</item>
+	</style>
+</resources>
