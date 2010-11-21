@@ -19,9 +19,12 @@ import android.widget.Button;
 public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
     
 	private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-	private static final String MAIN_MENU_INSTRUCTIONS = "Please say: Media, New User or Friends.";
+	private static final String MAIN_MENU_INSTRUCTIONS = "Please say: Media, New User, Friends or Disable.";
     
     private TextToSpeech mTts; 
+    
+	//flag lets us know if we've disabled voice recog in mainMenu
+	private Boolean _speechIsDisabled = false;
 
 	/** Called when the activity is first created. */
     @Override
@@ -85,7 +88,9 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 	private void launchActivity(int activity) {
 	
 		Intent intent = null;
-	
+		Boolean _noLaunch = false;
+		Bundle b = null;
+		
 		switch(activity){
 			case 1:
 				intent = new Intent(this , mediaSelect.class);
@@ -94,7 +99,9 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 				intent = new Intent(this , newUserLogin.class);
 				break;
 			case 4:
-				Bundle b = new Bundle();
+				if(b == null){	
+					b = new Bundle();
+				}
 				b.putString("DEFAULTTEXT","ATTENTION DEVELOPER!  NO TEXT INPUT IF SELECTED FROM MAIN MENU!!");
 				intent = new Intent(this , reviewAndSend.class);
 				intent.putExtras(b);
@@ -102,12 +109,22 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			case 5:
 				intent = new Intent(this , viewFriends.class);
 				break;
-				
-				
-				
+			case 6:
+				_speechIsDisabled = true;
+				if(b == null){ b = new Bundle(); }
+				b.putBoolean("VR_DISABLED",true);
+				_noLaunch = true;
+				break;       
 		}//end switch
 		
-		startActivity(intent);
+		if(_noLaunch){
+			_noLaunch = false;
+		}else{
+			if(b != null){
+				intent.putExtras(b);
+			}
+			startActivity(intent);
+		}
 		
 	}//end launchActivity
 	
@@ -143,6 +160,8 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
         		selection = 3;
         	}else if(selectCommand.compareToIgnoreCase("friends") == 0){
         		selection = 5;
+        	}else if(selectCommand.compareToIgnoreCase("disable") == 0){
+        		selection = 6;
         	}
 
         	 super.onActivityResult(requestCode, resultCode, data);
@@ -161,8 +180,8 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
     private void sayit(String x) {
 		mTts.speak(x, TextToSpeech.QUEUE_FLUSH, null);
 	}
-    
- //   @Override
+
+	@Override
 	public void onInit(int status) {
 		
 		if (status == TextToSpeech.SUCCESS) {
