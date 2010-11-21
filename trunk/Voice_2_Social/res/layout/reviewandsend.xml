@@ -7,21 +7,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Review and Send" />
+        android:text="@string/reviewAndSendIntructions" />
         
     <TextView android:id="@+id/textForReview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Review and Send" />
+        android:layout_height="wrap_content"/>
+    
     <TextView
     	style="@style/CodeFont"    
-    	android:text="@string/hello" />
+    	android:text="@string/reviewAndSendIntructions" />
             
-    <Button android:id="@+id/button1"
+    <Button android:id="@+id/acceptButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Accept" />
-    <Button android:id="@+id/button2"
+        
+    <Button android:id="@+id/reRecordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/illu_icon_microphone"
