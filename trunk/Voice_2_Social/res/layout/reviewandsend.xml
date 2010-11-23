@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reviewAndSendIntructions" />
-        
-    <TextView android:id="@+id/textForReview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    
-    <TextView
-    	style="@style/CodeFont"    
-    	android:text="@string/reviewAndSendIntructions" />
-            
-    <Button android:id="@+id/acceptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Accept" />
-        
-    <Button android:id="@+id/reRecordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/illu_icon_microphone"
-        android:text="Record Again" />
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:background="#00FF00"
+		android:orientation="vertical">
 
- </LinearLayout>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="Review and Send" />
+    
+    
+    	<EditText 
+    		android:text="hello" 
+    		android:id="@+id/EditText01"
+    		android:textColor="#00FF00"
+    		android:layout_width="fill_parent" 
+   			android:layout_height="wrap_content"/>
+   		<!-- <TextView
+    		style="@style/CodeFont"    
+    		android:text="@string/hello" />
+    		 -->
+            
+   		<Button android:id="@+id/button1"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:text="Speak" />
+    	<Button android:id="@+id/button2" 
+    		android:layout_width="fill_parent" 
+    		android:layout_height="wrap_content" 
+    		android:text="Record Again" />
+    		<!--  android:background="@drawable/illu_icon_microphone"-->
+    		
+    
+
+</LinearLayout>
