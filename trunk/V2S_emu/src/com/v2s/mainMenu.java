@@ -12,7 +12,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
+import android.content.ActivityNotFoundException;
 
 
 
@@ -115,11 +115,16 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 	
 	private void startVoiceRecognitionActivity() {
 		
-    //	Intent commandIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-    //    commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-    //            RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+    	Intent commandIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         //commandIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech recognition demo");
-    //    startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
+        try {
+        	startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
+        } catch (ActivityNotFoundException e) {
+        	// say the exception!!! :-)
+        	sayit("Voice recognizer not present!");
+        }
     }
 	
 	
