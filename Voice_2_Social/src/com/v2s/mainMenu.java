@@ -6,19 +6,31 @@ import java.util.Locale;
 import android.app.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.ActivityNotFoundException;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.view.MenuItem;
+//import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+//import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.content.ActivityNotFoundException;
+import android.widget.EditText;
+
 
 public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 
 	private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
 	private static final String MAIN_MENU_INSTRUCTIONS = "Please say: Media, New User, Friends or Disable.";
 
+	private SharedPreferences prefs = null;
+	private EditText status=null;
+	
 	private TextToSpeech mTts;
 
 	// flag lets us know if we've disabled voice recog in mainMenu
@@ -40,6 +52,8 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 
 		Button reviewAndSendButton = (Button) findViewById(R.id.reviewAndSendButton);
 
+		prefs=PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(prefListener);
 		/*
 		 * Set Button Click Listeners
 		 */
@@ -71,6 +85,8 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			}
 		});
 
+
+		
 		/**
 		 * Text to Speech for Instructions
 		 */
@@ -176,6 +192,34 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		new MenuInflater(getApplication()).inflate(R.menu.option, menu);
+
+		return(super.onCreateOptionsMenu(menu));
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId()==R.id.prefs) {
+			sayit("do the prefs now!");
+			startActivity(new Intent(this, prefsActivity.class));
+			
+			return(true);
+		}
+		
+		return(super.onOptionsItemSelected(item));
+	}		
+	
+	private SharedPreferences.OnSharedPreferenceChangeListener prefListener=
+		new SharedPreferences.OnSharedPreferenceChangeListener() {
+		public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
+			if (key.equals("user") || key.equals("password")) {
+				//resetClient();
+			}
+		}
+	};
+	
 	private void sayit(String x) {
 		mTts.speak(x, TextToSpeech.QUEUE_FLUSH, null);
 	}
