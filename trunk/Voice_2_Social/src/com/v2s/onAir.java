@@ -20,7 +20,8 @@ public class onAir extends Activity {
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
     private Button speakButton;
     private Bundle recordingResultsBundle;
-    
+    private Bundle networkSelectedBundle;
+    private String networkSelected;
     //private ListView mList;
 
     /**
@@ -38,7 +39,7 @@ public class onAir extends Activity {
         speakButton.setTextSize(30);
         
         Bundle incomingBundle = this.getIntent().getExtras();
-        String networkSelected = incomingBundle.getString("DEFAULTTEXT");
+        networkSelected = incomingBundle.getString("DEFAULTTEXT");
         
         TextView onAirTextView = (TextView) findViewById(R.id.onAirTextView);
         onAirTextView.setTextSize(25);
@@ -89,7 +90,6 @@ public class onAir extends Activity {
         	
         	//append each word match to text view
         	for(int i = 0; i<matches.size();i++){
-        		//speechText.append(" "+matches.get(i));
         		speechText.setText(" "+matches.get(i));
         	}	
         	
@@ -97,6 +97,7 @@ public class onAir extends Activity {
         	
         	recordingResultsBundle = new Bundle();
         	recordingResultsBundle.putString("DEFAULTTEXT", speechText.getText().toString());
+        	recordingResultsBundle.putString("NETWORKSELECTED", networkSelected);
         	
         	speakButton.setText("Review and Post Recording");
         	speakButton.setOnClickListener(new OnClickListener() {
