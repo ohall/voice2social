@@ -99,7 +99,7 @@ public class mediaSelect extends Activity implements
 			intent = new Intent(this, onAir.class);
 			break;
 		case 3:
-			bundle.putString("DEFAULTTEXT", "Google Buzz");
+			bundle.putString("DEFAULTTEXT", "Buzz");
 			intent = new Intent(this, onAir.class);
 			break;
 
@@ -128,11 +128,11 @@ public class mediaSelect extends Activity implements
 
 			selectCommand = matches.get(0);
 
-			if (selectCommand.compareToIgnoreCase("twitter") == 0) {
+			if (selectCommand.compareToIgnoreCase("Twitter") == 0) {
 				selection = 1;
-			} else if (selectCommand.compareToIgnoreCase("facebook") == 0) {
+			} else if (selectCommand.compareToIgnoreCase("Facebook") == 0) {
 				selection = 2;
-			} else if (selectCommand.compareToIgnoreCase("buzz") == 0) {
+			} else if (selectCommand.compareToIgnoreCase("Buzz") == 0) {
 				selection = 3;
 			}
 
