@@ -46,8 +46,6 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 		 */
 		Button mediaSelectButton = (Button) findViewById(R.id.mediaSelectButton);
 
-		Button newUserLoginButton = (Button) findViewById(R.id.newUserLoginButton);
-
 		Button viewFriends = (Button) findViewById(R.id.viewFriends);
 
 		Button reviewAndSendButton = (Button) findViewById(R.id.reviewAndSendButton);
@@ -61,13 +59,6 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			public void onClick(View view) {
 				// start review and send activity
 				launchActivity(1);
-			}
-		});
-
-		newUserLoginButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				// start review and send activity
-				launchActivity(3);
 			}
 		});
 
@@ -103,9 +94,6 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 		switch (activity) {
 		case 1:
 			intent = new Intent(this, mediaSelect.class);
-			break;
-		case 3:
-			intent = new Intent(this, newUserLogin.class);
 			break;
 		case 4:
 			if (b == null) {
