@@ -27,6 +27,10 @@
     		android:layout_width="fill_parent" 
     		android:layout_height="wrap_content" 
     		android:text="Record Again" />
+    	<Button android:id="@+id/button3" 
+    		android:layout_width="fill_parent" 
+    		android:layout_height="wrap_content" 
+    		android:text="Post Recording" />
     		<!--  android:background="@drawable/illu_icon_microphone"-->
     		
     
