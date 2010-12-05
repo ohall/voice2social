@@ -1,29 +1,34 @@
 package com.v2s;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class mediaSelect extends Activity implements
-		TextToSpeech.OnInitListener {
+public class mediaSelect extends Activity implements TextToSpeech.OnInitListener,TextToSpeech.OnUtteranceCompletedListener {
 	/** Called when the activity is first created. */
 
-	private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-	private static final String INSTRUCTIONS = "Please say: Twitter, Facebook or Buzz";
-	private TextToSpeech mTts;
-
-	// flag lets us know if we've disabled voice recog in mainMenu
-	private Boolean _speechIsDisabled = false;
-
+	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
+	private static final 	String INSTRUCTIONS 				= "Please say: Twitter, Facebook or Buzz";
+	private static final	int GOTO_TWITTER					= 1;
+	private static final 	int GOTO_FACEBOOK 					= 2;
+	private static final 	int GOTO_BUZZ 						= 3;
+	private 				TextToSpeech mTts;
+	private 				SharedPreferences prefs;
+	private 				Boolean voiceEnabled;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,32 +36,31 @@ public class mediaSelect extends Activity implements
 
 		// get bundle from intent and assign it to a string;
 		Bundle incomingBundle = this.getIntent().getExtras();
-		// _speechIsDisabled = incomingBundle.getBoolean("VR_DISABLED",false);
-
 		Button twitterButton = (Button) findViewById(R.id.twitterButton);
-
 		Button fbButton = (Button) findViewById(R.id.fbButton);
-
 		Button buzzButton = (Button) findViewById(R.id.buzzButton);
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		voiceEnabled = prefs.getBoolean("voice_on", false);
 
 		twitterButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				// start review and send activity
-				launchActivity(1);
+				launchActivity(GOTO_TWITTER);
 			}
 		});
 
 		fbButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				// start review and send activity
-				launchActivity(2);
+				launchActivity(GOTO_FACEBOOK);
 			}
 		});
 
 		buzzButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				// start review and send activity
-				launchActivity(3);
+				launchActivity(GOTO_BUZZ);
 			}
 		});
 
@@ -73,8 +77,6 @@ public class mediaSelect extends Activity implements
 				RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
 				RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-		// commandIntent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-		// "Speech recognition demo");
         try {
         	startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
         } catch (ActivityNotFoundException e) {
@@ -90,15 +92,15 @@ public class mediaSelect extends Activity implements
 
 		switch (activity) {
 
-		case 1:
+		case GOTO_TWITTER:
 			bundle.putString("DEFAULTTEXT", "Twitter");
 			intent = new Intent(this, onAir.class);
 			break;
-		case 2:
+		case GOTO_FACEBOOK:
 			bundle.putString("DEFAULTTEXT", "Facebook");
 			intent = new Intent(this, onAir.class);
 			break;
-		case 3:
+		case GOTO_BUZZ:
 			bundle.putString("DEFAULTTEXT", "Buzz");
 			intent = new Intent(this, onAir.class);
 			break;
@@ -111,14 +113,28 @@ public class mediaSelect extends Activity implements
 	}// end launchActivity
 
 	private void sayit(String x) {
-		mTts.speak(x, TextToSpeech.QUEUE_FLUSH, null);
+		if(voiceEnabled){
+			HashMap<String, String> myHashAlarm = new HashMap();
+			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+			        String.valueOf(AudioManager.STREAM_ALARM));		
+			mTts.setOnUtteranceCompletedListener(this);
+			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+			        String.valueOf(AudioManager.STREAM_ALARM));
+			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
+			        "end of voice intructions");
+			// myHashAlarm now contains two optional parameters
+			mTts.speak(x, TextToSpeech.QUEUE_ADD, myHashAlarm);
+		}
 	}
+	
+	public void onUtteranceCompleted(String uttId) {
+		startVoiceRecognitionActivity();
+}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		int selection = 0;
-
 		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE
 				&& resultCode == RESULT_OK) {
 
@@ -129,11 +145,11 @@ public class mediaSelect extends Activity implements
 			selectCommand = matches.get(0);
 
 			if (selectCommand.compareToIgnoreCase("Twitter") == 0) {
-				selection = 1;
+				selection = GOTO_TWITTER;
 			} else if (selectCommand.compareToIgnoreCase("Facebook") == 0) {
-				selection = 2;
+				selection = GOTO_FACEBOOK;
 			} else if (selectCommand.compareToIgnoreCase("Buzz") == 0) {
-				selection = 3;
+				selection = GOTO_BUZZ;
 			}
 
 			super.onActivityResult(requestCode, resultCode, data);
@@ -144,29 +160,19 @@ public class mediaSelect extends Activity implements
 				startVoiceRecognitionActivity();
 			}
 		}
-
 	}
 
 	@Override
 	public void onInit(int status) {
 
-		if (!_speechIsDisabled) {
-
 			if (status == TextToSpeech.SUCCESS) {
-
 				int result = mTts.setLanguage(Locale.getDefault());
-
 				if (result == TextToSpeech.LANG_MISSING_DATA
 						|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
 					mTts.setLanguage(Locale.US);
 				}
-
 				sayit(INSTRUCTIONS);
-
-				startVoiceRecognitionActivity();
 			}
-		}
-
 	}
 
 	@Override
@@ -176,8 +182,6 @@ public class mediaSelect extends Activity implements
 			mTts.stop();
 			mTts.shutdown();
 		}
-
 		super.onDestroy();
 	}
-
 }
