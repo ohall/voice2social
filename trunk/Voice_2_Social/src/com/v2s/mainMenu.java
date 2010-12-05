@@ -1,81 +1,81 @@
 package com.v2s;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import android.app.Activity;
-
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.ActivityNotFoundException;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.view.MenuItem;
-//import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-//import android.view.MenuItem;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
 
-public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
+public class mainMenu extends Activity implements TextToSpeech.OnInitListener,
+TextToSpeech.OnUtteranceCompletedListener {
 
-	private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-	private static final String MAIN_MENU_INSTRUCTIONS = "Please say: Media, New User, Friends or Disable.";
-
-	private SharedPreferences prefs = null;
-	private EditText status=null;
+	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
+	private static final 	String MAIN_MENU_INSTRUCTIONS 		= "Please say: Media, New User, Friends or Quit.";
+	private static final 	int GOTO_MEDIA_SELECT 				= 1;
+	private static final 	int GOTO_REVIEW_SEND 				= 4;
+	private static final 	int GOTO_VIEW_FRIENDS 				= 5;
+	private static final 	int QUIT 							= 6;
 	
-	private TextToSpeech mTts;
-
-	// flag lets us know if we've disabled voice recog in mainMenu
-	private Boolean _speechIsDisabled = false;
+	private		SharedPreferences prefs;
+	private 	Boolean voiceEnabled;
+	private 	TextToSpeech mTts;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		/*
-		 * Create Buttons
-		 */
+
 		Button mediaSelectButton = (Button) findViewById(R.id.mediaSelectButton);
-
 		Button viewFriends = (Button) findViewById(R.id.viewFriends);
-
 		Button reviewAndSendButton = (Button) findViewById(R.id.reviewAndSendButton);
 
 		prefs=PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(prefListener);
+		
+		
 		/*
 		 * Set Button Click Listeners
 		 */
 		mediaSelectButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				// start review and send activity
-				launchActivity(1);
+				launchActivity(GOTO_MEDIA_SELECT);
 			}
 		});
 
 		reviewAndSendButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				// start review and send activity
-				launchActivity(4);
+				launchActivity(GOTO_REVIEW_SEND);
 			}
 		});
 
 		viewFriends.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				// start review and send activity
-				launchActivity(5);
+				launchActivity(GOTO_VIEW_FRIENDS);
 			}
 		});
-
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		voiceEnabled = prefs.getBoolean("voice_on", false);
 
 		
 		/**
@@ -88,61 +88,51 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 	private void launchActivity(int activity) {
 
 		Intent intent = null;
-		Boolean _noLaunch = false;
 		Bundle b = null;
 
 		switch (activity) {
-		case 1:
+		case GOTO_MEDIA_SELECT:
 			intent = new Intent(this, mediaSelect.class);
 			break;
-		case 4:
+		case GOTO_REVIEW_SEND:
 			if (b == null) {
 				b = new Bundle();
 			}
-			b
-					.putString("DEFAULTTEXT",
+			b.putString("DEFAULTTEXT",
 							"ATTENTION DEVELOPER!  NO TEXT INPUT IF SELECTED FROM MAIN MENU!!");
 			intent = new Intent(this, reviewAndSend.class);
 			intent.putExtras(b);
 			break;
-		case 5:
+		case GOTO_VIEW_FRIENDS:
 			intent = new Intent(this, viewFriends.class);
 			break;
-		case 6:
-			_speechIsDisabled = true;
-			if (b == null) {
-				b = new Bundle();
-			}
-			b.putBoolean("VR_DISABLED", true);
-			_noLaunch = true;
+		case QUIT:
+			onTerminate();
 			break;
 		}// end switch
 
-		if (_noLaunch) {
-			_noLaunch = false;
-		} else {
-			if (b != null) {
-				intent.putExtras(b);
-			}
-			startActivity(intent);
+		if (b != null) {
+			intent.putExtras(b);			
 		}
+		startActivity(intent);
 
 	}// end launchActivity
 
 	private void startVoiceRecognitionActivity() {
-
-		Intent commandIntent = new Intent(
-				RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-		commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-				RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-		// commandIntent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-		// "Speech recognition demo");
-        try {
-        	startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
-        } catch (ActivityNotFoundException e) {
-        	// say the exception!!! :-)
-        	sayit("Voice recognizer not present!");
-        }
+		
+		if(voiceEnabled){
+			Intent commandIntent = new Intent(
+					RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			commandIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+					RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+	        try {
+	        	startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
+	        } catch (ActivityNotFoundException e) {
+	        	// say the exception!!! :-)
+	        	sayit("Voice recognizer not present!");
+	        	voiceEnabled = false;
+	        }
+		}
 	}
 
 	@Override
@@ -160,13 +150,11 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			selectCommand = matches.get(0);
 
 			if (selectCommand.compareToIgnoreCase("media") == 0) {
-				selection = 1;
-			} else if (selectCommand.compareToIgnoreCase("new user") == 0) {
-				selection = 3;
+				selection = GOTO_MEDIA_SELECT;
 			} else if (selectCommand.compareToIgnoreCase("friends") == 0) {
-				selection = 5;
-			} else if (selectCommand.compareToIgnoreCase("disable") == 0) {
-				selection = 6;
+				selection = GOTO_VIEW_FRIENDS;
+			} else if (selectCommand.compareToIgnoreCase("quit") == 0) {
+				selection = QUIT;
 			}
 
 			super.onActivityResult(requestCode, resultCode, data);
@@ -174,10 +162,11 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			if (selection != 0) {
 				launchActivity(selection);
 			} else {
-				startVoiceRecognitionActivity();
+				if(voiceEnabled){
+					startVoiceRecognitionActivity();
+				}
 			}
 		}
-
 	}
 
 	@Override
@@ -195,7 +184,6 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			
 			return(true);
 		}
-		
 		return(super.onOptionsItemSelected(item));
 	}		
 	
@@ -209,26 +197,37 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 	};
 	
 	private void sayit(String x) {
-		mTts.speak(x, TextToSpeech.QUEUE_FLUSH, null);
+
+		if(voiceEnabled){
+			HashMap<String, String> myHashAlarm = new HashMap();
+			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+			        String.valueOf(AudioManager.STREAM_ALARM));		
+			
+			mTts.setOnUtteranceCompletedListener(this);
+			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+			        String.valueOf(AudioManager.STREAM_ALARM));
+			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
+			        "end of voice intructions");
+			// myHashAlarm now contains two optional parameters
+			mTts.speak(x, TextToSpeech.QUEUE_ADD, myHashAlarm);
+		}
+	}
+	
+	public void onUtteranceCompleted(String uttId) {
+			startVoiceRecognitionActivity();
 	}
 
 	@Override
 	public void onInit(int status) {
 
 		if (status == TextToSpeech.SUCCESS) {
-
 			int result = mTts.setLanguage(Locale.getDefault());
-
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
 				mTts.setLanguage(Locale.US);
 			}
-
 			sayit(MAIN_MENU_INSTRUCTIONS);
-
-			startVoiceRecognitionActivity();
 		}
-
 	}
 
 	@Override
@@ -238,8 +237,12 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener {
 			mTts.stop();
 			mTts.shutdown();
 		}
-
 		super.onDestroy();
 	}
+	
+	public void onTerminate() {	  
+        onDestroy();
+        this.finish(); // close the application
+    }
 
 }// end activity
