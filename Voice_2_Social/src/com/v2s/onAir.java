@@ -17,12 +17,11 @@ import android.widget.TextView;
 
 public class onAir extends Activity {
     
-    private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-    private Button speakButton;
-    private Bundle recordingResultsBundle;
-    private Bundle networkSelectedBundle;
-    private String networkSelected;
-    //private ListView mList;
+    private static final 	int VOICE_RECOGNITION_REQUEST_CODE = 1234;
+    private 				Button speakButton;
+    private Bundle 			recordingResultsBundle;
+    private Bundle 			networkSelectedBundle;
+    private String 			networkSelected;
 
     /**
      * Called with the activity is first created.
@@ -33,8 +32,6 @@ public class onAir extends Activity {
         
         setContentView(R.layout.onair);
 
-        
-        
         speakButton = (Button) findViewById(R.id.onAirRecordButton);  
         speakButton.setTextSize(30);
         
@@ -71,7 +68,7 @@ public class onAir extends Activity {
     private void startVoiceRecognitionActivity() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                		RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech recognition demo");
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
@@ -92,7 +89,6 @@ public class onAir extends Activity {
         	for(int i = 0; i<matches.size();i++){
         		speechText.setText(" "+matches.get(i));
         	}	
-        	
         	speechText.setTextSize(20);
         	
         	recordingResultsBundle = new Bundle();
@@ -108,8 +104,7 @@ public class onAir extends Activity {
                 
             });
 
-        }
-
+    	}
         super.onActivityResult(requestCode, resultCode, data);
     }
     	
@@ -117,9 +112,5 @@ public class onAir extends Activity {
     		Intent i = new Intent(this , reviewAndSend.class);
     		i.putExtras(recordingResultsBundle);
     		startActivity(i);
-    		
-
         }
-    	
-    	
 }
