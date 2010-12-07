@@ -67,12 +67,12 @@ public class reviewAndSend extends Activity implements TextToSpeech.OnInitListen
         recordAgainButton.setOnClickListener(new OnClickListener() {
 	    	public void onClick(View view){
 	    		//launch record for twitter.
-	            if(networkSelected == "Twitter"){
+	            if(networkSelected.compareTo("Twitter") == 0){
 	            	launchActivity(GOTO_TWITTER);
-	             }else if(networkSelected == "Facebook"){
+	             }else if(networkSelected.compareTo("Facebook") == 0){
 		            launchActivity(GOTO_FACEBOOK);
 	      	
-	              }else if(networkSelected == "Buzz"){
+	              }else if(networkSelected.compareTo("Buzz") == 0){
 		            launchActivity(GOTO_BUZZ);
 	              }
 	    	}
@@ -83,29 +83,41 @@ public class reviewAndSend extends Activity implements TextToSpeech.OnInitListen
         postRecordingButton.setText("Post Recording to "+networkSelected);
         postRecordingButton.setOnClickListener(new OnClickListener() {
 	    	public void onClick(View view){
-		           // set twitter status, catch exceptions. 
-	    		try{
-	              twitter.setStatus(text);
-	              Toast.makeText(reviewAndSend.this, 
-	            		  "Twitter Post Success!", Toast.LENGTH_SHORT).show();
-	    		}catch(TwitterException.E401 e){
-		          Toast.makeText(reviewAndSend.this, 
-		        		  "Wrong Username or Password. Please check logins.", 
-		        		  Toast.LENGTH_SHORT).show();
+	    		
+	            if(networkSelected.compareTo("Twitter") == 0){
+		    		//if we're in Twitter, try a twitter post
+	            	try{ // set twitter status, catch exceptions. 
+			              twitter.setStatus(text);
+			              Toast.makeText(reviewAndSend.this,"Twitter Post Success!", Toast.LENGTH_SHORT).show();
+			    		}catch(TwitterException.E401 e){
+				          Toast.makeText(reviewAndSend.this,"Wrong Username or Password. Please check logins.", 
+				        		  Toast.LENGTH_SHORT).show();
+			    		}catch(Exception e){
+			    				Toast.makeText(reviewAndSend.this, 
+			    					"Network Host not responding. Check User Name and Password in Preferences Menu",
+			    					Toast.LENGTH_LONG).show();
+			    		}
+			    		//return to main menu
+			    		launchActivity(GOTO_MAIN_MENU);
+			    		
+	             }else if(networkSelected.compareTo("Facebook") == 0){
+	            	 
+	            	 /*
+	            	  * PUT CODE FOR UPDATING FACEBOOK HERE
+	            	  */
+	            	 
+	             }else if(networkSelected.compareTo("Buzz") == 0){
+	            	 
+	            	 /*
+	            	  * PUT CODE FOR UPDATING BUZZ HERE
+	            	  */
+	            	  
+	             }
+		          
 
-	    		}catch(Exception e){
-	    			
-	    				Toast.makeText(reviewAndSend.this, 
-	    					"Network Host not responding. Check User Name and Password in Preferences Menu",
-	    					Toast.LENGTH_LONG).show();
-	    		}
-	    		//return to main menu
-	    		launchActivity(GOTO_MAIN_MENU);
 	    	}
 	    	});
-        
-        
-
+     
     }
     
     private void sayit(String x) {
