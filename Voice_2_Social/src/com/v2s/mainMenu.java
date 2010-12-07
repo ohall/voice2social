@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 
 
 public class mainMenu extends Activity implements TextToSpeech.OnInitListener,
