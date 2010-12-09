@@ -52,6 +52,16 @@
 
     <activity android:name=".prefsActivity"
     		  android:screenOrientation="portrait"></activity>
+    		  
+        <activity android:name=".OAUTH"
+			android:label="@string/oauth_name" >
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="127.0.0.1" />
+			</intent-filter>
+        </activity>
     
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </application>
