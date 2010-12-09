@@ -25,7 +25,7 @@ public class mainMenu extends Activity implements TextToSpeech.OnInitListener,
 TextToSpeech.OnUtteranceCompletedListener {
 
 	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
-	private static final 	String MAIN_MENU_INSTRUCTIONS 		= "Please say: Media, New User, Friends or Quit.";
+	private static final 	String MAIN_MENU_INSTRUCTIONS 		= "Please say: Media, to continue";
 	private static final 	int GOTO_MEDIA_SELECT 				= 1;
 	private static final 	int GOTO_REVIEW_SEND 				= 4;
 	private static final 	int GOTO_VIEW_FRIENDS 				= 5;
@@ -42,9 +42,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 		setContentView(R.layout.main);
 
 		Button mediaSelectButton = (Button) findViewById(R.id.mediaSelectButton);
-		Button viewFriends = (Button) findViewById(R.id.viewFriends);
-		Button reviewAndSendButton = (Button) findViewById(R.id.reviewAndSendButton);
-
+		
 		prefs=PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(prefListener);
 		
@@ -59,19 +57,6 @@ TextToSpeech.OnUtteranceCompletedListener {
 			}
 		});
 
-		reviewAndSendButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				// start review and send activity
-				launchActivity(GOTO_REVIEW_SEND);
-			}
-		});
-
-		viewFriends.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				// start review and send activity
-				launchActivity(GOTO_VIEW_FRIENDS);
-			}
-		});
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		voiceEnabled = prefs.getBoolean("voice_on", false);
@@ -178,7 +163,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId()==R.id.prefs) {
-			sayit("do the prefs now!");
+			//sayit("do the prefs now!");
 			startActivity(new Intent(this, prefsActivity.class));
 			
 			return(true);
