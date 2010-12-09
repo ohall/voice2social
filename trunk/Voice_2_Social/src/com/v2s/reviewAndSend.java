@@ -1,16 +1,16 @@
 package com.v2s;
-import com.facebook.android.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 import org.apache.http.client.HttpClient;
 
+import winterwell.jtwitter.Twitter;
 import winterwell.jtwitter.TwitterException;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -43,14 +43,14 @@ TextToSpeech.OnUtteranceCompletedListener {
     private String networkSelected;
     private String username;
     private String password;
-  //  private Twitter twitter;
+    private Twitter twitter;
     private SharedPreferences prefs;
 	private Boolean 			voiceEnabled;
 	
     public static final	String applicationId = "163165113694638";		/////////////
     private Facebook v2sfacebook;
     
-    // twitter
+    //twitter
 	public static final String TWITTER_CONSUMER_KEY = "VCAyWqLcWLN4CNr9yeFEMw";
 	public static final String TWITTER_CONSUMER_SECRET = "5Sj4avGxLYcNKSTw2LQjYkONeqVwA5eVRSO0uQxjBm8"; 
 	 
@@ -79,7 +79,7 @@ TextToSpeech.OnUtteranceCompletedListener {
         textForReview 			= (EditText) findViewById(R.id.EditText01);
         textForReview.setText(text);
         prefs 					= PreferenceManager.getDefaultSharedPreferences(this);
-    //    mSettings = this.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+       // mSettings = this.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 		voiceEnabled = prefs.getBoolean("voice_on", false);
               
         speakButton = (Button) findViewById(R.id.button1);
@@ -125,7 +125,7 @@ TextToSpeech.OnUtteranceCompletedListener {
         if(networkSelected.compareTo("Twitter") == 0){
     		//if we're in Twitter, try a twitter post
         	try{ // set twitter status, catch exceptions. 
-	        //      twitter.setStatus(text);
+	              twitter.setStatus(textForReview.getText().toString());
 	              Toast.makeText(reviewAndSend.this,"Twitter Post Success!", Toast.LENGTH_SHORT).show();
 	    		}catch(TwitterException.E401 e){
 		          Toast.makeText(reviewAndSend.this,"Wrong Username or Password. Please check logins.", 
@@ -136,7 +136,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 	    					Toast.LENGTH_LONG).show();
 	    		}
 	    		//return to main menu
-	    		launchActivity(GOTO_MAIN_MENU);
+	    		
 	    		
          }else if(networkSelected.compareTo("Facebook") == 0){
         	 
@@ -146,6 +146,8 @@ TextToSpeech.OnUtteranceCompletedListener {
                  parameters.putString("message", textForReview.getText().toString());
                  response = v2sfacebook.request("me/feed", parameters, 
                          "POST");
+	              Toast.makeText(reviewAndSend.this,"Facebook Post Success!", Toast.LENGTH_SHORT).show();
+
           } catch(Exception e) {
               e.printStackTrace();
           }	                
@@ -162,6 +164,8 @@ TextToSpeech.OnUtteranceCompletedListener {
         	  */
         	  
          }
+        
+        launchActivity(GOTO_MAIN_MENU);
     	
     }
     
@@ -216,8 +220,8 @@ TextToSpeech.OnUtteranceCompletedListener {
         } catch (ActivityNotFoundException e) {
         	// say the exception!!! :-)
         	//sayit("Voice recognizer not present!");
-        	//prefs.edit().putBoolean("voice_on", false);
-        	//Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
+        	prefs.edit().putBoolean("voice_on", false);
+        	Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
         	voiceEnabled = false;
         }
 	}
@@ -238,24 +242,24 @@ TextToSpeech.OnUtteranceCompletedListener {
         if(networkSelected.compareTo("Twitter") == 0){
     
         //Get login data for twitter account from prefs and log into twitter.
-//	        username = prefs.getString("t_user", null);
-	//        password = prefs.getString("t_password", null);
+	        username = prefs.getString("t_user", null);
+	        password = prefs.getString("t_password", null);
 	        if (username != null && password != null){
-//	    
+	    
 /*	        	final DefaultOAuthProvider provider = new DefaultOAuthProvider(
 	    	            "http://twitter.com/oauth/request_token",
 	    	            "http://twitter.com/oauth/access_token",
 	    	            "http://twitter.com/oauth/authorize");
 */	        	
-//	        twitter = new Twitter(username, password);
-//	          //Set Re-rout to identi while resolving twitter issues.
-//	          twitter.setAPIRootUrl("http://identi.ca/api");
+	        twitter = new Twitter(username, password);
+	          //Set Re-rout to identi while resolving twitter issues.
+	          twitter.setAPIRootUrl("http://identi.ca/api");
 	        }else{
-//	        	Builder builder = new AlertDialog.Builder(this);
-//	        	builder.setTitle("Set Twitter Login Info");
-//	        	builder.setMessage("Please set your Twitter username and password using the menu button");
-//	        	builder.setPositiveButton("OK",null);
-//	        	builder.show();
+	        	Builder builder = new AlertDialog.Builder(this);
+	        	builder.setTitle("Set Twitter Login Info");
+	        	builder.setMessage("Please set your Twitter username and password using the menu button");
+	        	builder.setPositiveButton("OK",null);
+	        	builder.show();
 	        }
         }else if(networkSelected.compareTo("Facebook") == 0){
         	
