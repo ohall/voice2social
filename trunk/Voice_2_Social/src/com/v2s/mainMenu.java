@@ -19,13 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
+import android.widget.Toast;
 
 public class mainMenu extends Activity implements TextToSpeech.OnInitListener,
 TextToSpeech.OnUtteranceCompletedListener {
 
 	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
-	private static final 	String MAIN_MENU_INSTRUCTIONS 		= "Please say: Media, to continue";
+	private static final 	String MAIN_MENU_INSTRUCTIONS 		= "Please press button or say: media to continue";
 	private static final 	int GOTO_MEDIA_SELECT 				= 1;
 	private static final 	int GOTO_REVIEW_SEND 				= 4;
 	private static final 	int GOTO_VIEW_FRIENDS 				= 5;
@@ -44,9 +44,11 @@ TextToSpeech.OnUtteranceCompletedListener {
 		Button mediaSelectButton = (Button) findViewById(R.id.mediaSelectButton);
 		
 		prefs=PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(prefListener);
+//		prefs.registerOnSharedPreferenceChangeListener(prefListener);
+		// read prefs for voice (keep it here)
+		voiceEnabled = prefs.getBoolean("voice_on", false);
 		
-		
+
 		/*
 		 * Set Button Click Listeners
 		 */
@@ -57,11 +59,8 @@ TextToSpeech.OnUtteranceCompletedListener {
 			}
 		});
 
-		
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		voiceEnabled = prefs.getBoolean("voice_on", false);
 
-		
+	
 		/**
 		 * Text to Speech for Instructions
 		 */
@@ -114,6 +113,8 @@ TextToSpeech.OnUtteranceCompletedListener {
 	        } catch (ActivityNotFoundException e) {
 	        	// say the exception!!! :-)
 	        	sayit("Voice recognizer not present!");
+	        	//prefs.edit().putBoolean("voice_on", false);
+	        	//Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
 	        	voiceEnabled = false;
 	        }
 		}
@@ -198,7 +199,10 @@ TextToSpeech.OnUtteranceCompletedListener {
 	}
 	
 	public void onUtteranceCompleted(String uttId) {
-			startVoiceRecognitionActivity();
+		/* if voice recognition disabled or not present, there's no point in wasting CPU */	
+		//if(voiceEnabled){
+				startVoiceRecognitionActivity();
+		//}
 	}
 
 	@Override

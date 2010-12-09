@@ -16,6 +16,7 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class mediaSelect extends Activity implements TextToSpeech.OnInitListener,TextToSpeech.OnUtteranceCompletedListener {
 	/** Called when the activity is first created. */
@@ -82,6 +83,9 @@ public class mediaSelect extends Activity implements TextToSpeech.OnInitListener
         } catch (ActivityNotFoundException e) {
         	// say the exception!!! :-)
         	sayit("Voice recognizer not present!");
+        	//prefs.edit().putBoolean("voice_on", false);
+        	//Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
+        	voiceEnabled = false;
         }
 	}
 

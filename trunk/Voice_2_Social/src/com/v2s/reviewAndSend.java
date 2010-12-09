@@ -166,6 +166,9 @@ TextToSpeech.OnUtteranceCompletedListener {
         } catch (ActivityNotFoundException e) {
         	// say the exception!!! :-)
         	sayit("Voice recognizer not present!");
+        	//prefs.edit().putBoolean("voice_on", false);
+        	//Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
+        	voiceEnabled = false;
         }
 	}
     
