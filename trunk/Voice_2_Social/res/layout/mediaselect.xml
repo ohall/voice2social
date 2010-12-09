@@ -10,14 +10,14 @@
         android:text="Media Select"
         android:textSize= "30px"
         android:gravity="center_horizontal" 
-        android:layout_weight="1"/>
+        />
         
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Please select the network you would like to update" 
-        android:gravity="bottom"
         android:paddingTop="30px"
+        android:gravity="center"
         android:layout_weight="1"
         />
    
