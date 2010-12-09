@@ -13,6 +13,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -82,7 +85,7 @@ public class mediaSelect extends Activity implements TextToSpeech.OnInitListener
         	startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
         } catch (ActivityNotFoundException e) {
         	// say the exception!!! :-)
-        	sayit("Voice recognizer not present!");
+        	//sayit("Voice recognizer not present!");
         	//prefs.edit().putBoolean("voice_on", false);
         	//Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
         	voiceEnabled = false;
@@ -116,6 +119,26 @@ public class mediaSelect extends Activity implements TextToSpeech.OnInitListener
 
 	}// end launchActivity
 
+	/* Handlers for the Menu button */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		new MenuInflater(getApplication()).inflate(R.menu.option, menu);
+
+		return(super.onCreateOptionsMenu(menu));
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId()==R.id.prefs) {
+			//sayit("do the prefs now!");
+			startActivity(new Intent(this, prefsActivity.class));
+			
+			return(true);
+		}
+		return(super.onOptionsItemSelected(item));
+	}
+	
+	
 	private void sayit(String x) {
 		if(voiceEnabled){
 			HashMap<String, String> myHashAlarm = new HashMap();

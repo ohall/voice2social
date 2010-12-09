@@ -15,6 +15,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -138,6 +141,25 @@ TextToSpeech.OnUtteranceCompletedListener {
     		i.putExtras(recordingResultsBundle);
     		startActivity(i);
         }
+    	
+    	/* Handlers for the Menu button */
+    	@Override
+    	public boolean onCreateOptionsMenu(Menu menu) {
+    		new MenuInflater(getApplication()).inflate(R.menu.option, menu);
+
+    		return(super.onCreateOptionsMenu(menu));
+    	}
+    	
+    	@Override
+    	public boolean onOptionsItemSelected(MenuItem item) {
+    		if (item.getItemId()==R.id.prefs) {
+    			//sayit("do the prefs now!");
+    			startActivity(new Intent(this, prefsActivity.class));
+    			
+    			return(true);
+    		}
+    		return(super.onOptionsItemSelected(item));
+    	}
     	
     	private void sayit(String x) {
 
