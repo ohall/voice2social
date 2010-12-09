@@ -112,7 +112,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 	        	startActivityForResult(commandIntent, VOICE_RECOGNITION_REQUEST_CODE);
 	        } catch (ActivityNotFoundException e) {
 	        	// say the exception!!! :-)
-	        	sayit("Voice recognizer not present!");
+	        	//sayit("Voice recognizer not present!");
 	        	//prefs.edit().putBoolean("voice_on", false);
 	        	//Toast.makeText(this, "No voice recognizer!", Toast.LENGTH_SHORT).show();
 	        	voiceEnabled = false;
@@ -154,6 +154,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 		}
 	}
 
+	/* Handlers for the Menu button */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		new MenuInflater(getApplication()).inflate(R.menu.option, menu);
@@ -171,7 +172,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 		}
 		return(super.onOptionsItemSelected(item));
 	}		
-	
+/*	
 	private SharedPreferences.OnSharedPreferenceChangeListener prefListener=
 		new SharedPreferences.OnSharedPreferenceChangeListener() {
 		public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
@@ -180,6 +181,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 			}
 		}
 	};
+*/
 	
 	private void sayit(String x) {
 
