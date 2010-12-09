@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/Users/oakley/Documents/projects/Voice_2_Social/libs/jtwitter.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Xclusiiv3/workspace/voice2social/Voice_2_Social/libs/jtwitter.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

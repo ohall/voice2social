@@ -8,6 +8,7 @@
         
         
         <activity android:name=".mainMenu" android:launchMode="standard"
+        		  android:screenOrientation="portrait"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,37 +18,44 @@
         </activity>
         
         <activity android:name=".mediaSelect"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
+                  
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         
         <activity android:name=".onAir"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         
         <activity android:name=".reviewAndSend"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         
         <activity android:name=".viewFriends"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-    <activity android:name=".prefsActivity"></activity>
+    <activity android:name=".prefsActivity"
+    		  android:screenOrientation="portrait"></activity>
     
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </application>
+
 
 
 </manifest> 
