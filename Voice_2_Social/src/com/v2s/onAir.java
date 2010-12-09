@@ -1,27 +1,38 @@
 package com.v2s;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
 
-public class onAir extends Activity {
+public class onAir extends Activity implements TextToSpeech.OnInitListener,
+TextToSpeech.OnUtteranceCompletedListener {
     
     private static final 	int VOICE_RECOGNITION_REQUEST_CODE = 1234;
+    private static final 	String ON_AIR_INSTRUCTIONS 		= "Record your post now";
     private 				Button speakButton;
     private Bundle 			recordingResultsBundle;
     private Bundle 			networkSelectedBundle;
     private String 			networkSelected;
+	private	SharedPreferences 	prefs;
+	private Boolean 			voiceEnabled;
+	private TextToSpeech 	mTts;
 
     /**
      * Called with the activity is first created.
@@ -42,6 +53,8 @@ public class onAir extends Activity {
         onAirTextView.setTextSize(25);
         onAirTextView.append(networkSelected);
         
+		prefs=PreferenceManager.getDefaultSharedPreferences(this);
+		voiceEnabled = prefs.getBoolean("voice_on", false);
    
 
         // Check to see if a recognition activity is present
@@ -59,6 +72,12 @@ public class onAir extends Activity {
             speakButton.setEnabled(false);
             speakButton.setText("Recognizer not present");
         }
+        
+		/**
+		 * Text to Speech for Instructions
+		 */
+		mTts = new TextToSpeech(this, this); // init text to speech
+        
     }
     
 
@@ -95,6 +114,12 @@ public class onAir extends Activity {
         	recordingResultsBundle.putString("DEFAULTTEXT", speechText.getText().toString());
         	recordingResultsBundle.putString("NETWORKSELECTED", networkSelected);
         	
+        	//if we're in voice mode go straight to review and send
+        	if(voiceEnabled){
+        		goToReviewAndSendActivity();
+        		
+        	}
+        	
         	speakButton.setText("Review and Post Recording");
         	speakButton.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
@@ -113,4 +138,49 @@ public class onAir extends Activity {
     		i.putExtras(recordingResultsBundle);
     		startActivity(i);
         }
+    	
+    	private void sayit(String x) {
+
+    		if(voiceEnabled){
+    			HashMap<String, String> myHashAlarm = new HashMap();
+    			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+    			        String.valueOf(AudioManager.STREAM_ALARM));		
+    			
+    			mTts.setOnUtteranceCompletedListener(this);
+    			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+    			        String.valueOf(AudioManager.STREAM_ALARM));
+    			myHashAlarm.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,
+    			        "end of voice intructions");
+    			// myHashAlarm now contains two optional parameters
+    			mTts.speak(x, TextToSpeech.QUEUE_ADD, myHashAlarm);
+    		}
+    	}
+    	
+    	public void onUtteranceCompleted(String uttId) {
+    			startVoiceRecognitionActivity();
+    	}
+    	
+    	@Override
+    	public void onInit(int status) {
+
+    		if (status == TextToSpeech.SUCCESS) {
+    			int result = mTts.setLanguage(Locale.getDefault());
+    			if (result == TextToSpeech.LANG_MISSING_DATA
+    					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
+    				mTts.setLanguage(Locale.US);
+    			}
+    			sayit(ON_AIR_INSTRUCTIONS);
+    		}
+    	}
+    	
+    	@Override
+    	public void onDestroy() {
+    		// kill it!
+    		if (mTts != null) {
+    			mTts.stop();
+    			mTts.shutdown();
+    		}
+    		super.onDestroy();
+    	}
+    	
 }
