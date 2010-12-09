@@ -3,7 +3,7 @@
 <resources>
 
     <string name="app_name">v2s</string>
-    <string name="pageTitleMain">Main Menu</string>
+    <string name="pageTitleMain">Voice 2 Social</string>
    	<string name="selectMedia">Select the social network you would like to post to.</string>
    	<string name="reviewAndSendIntructions">To post, press ACCEPT.  Otherwise edit manually or re-record.</string>	
     <string name="twitter">Twitter</string>
