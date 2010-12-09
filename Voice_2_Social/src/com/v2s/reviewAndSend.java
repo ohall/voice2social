@@ -1,12 +1,16 @@
 package com.v2s;
+import com.facebook.android.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import org.apache.http.client.HttpClient;
+
 import winterwell.jtwitter.TwitterException;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -46,6 +50,10 @@ TextToSpeech.OnUtteranceCompletedListener {
     public static final	String applicationId = "163165113694638";		/////////////
     private Facebook v2sfacebook;
     
+    // twitter
+	public static final String TWITTER_CONSUMER_KEY = "VCAyWqLcWLN4CNr9yeFEMw";
+	public static final String TWITTER_CONSUMER_SECRET = "5Sj4avGxLYcNKSTw2LQjYkONeqVwA5eVRSO0uQxjBm8"; 
+	 
 	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
 	private static final 	String REVIEW_AND_SEND_INSTRUCTIONS 		
 	= "say, post to post. record, to record again. or say speak, to hear your post read.";
@@ -55,6 +63,7 @@ TextToSpeech.OnUtteranceCompletedListener {
 	private static final 	int GOTO_MAIN_MENU 		= 4;
 	private static final 	int GOTO_MEDIA_SELECT 	= 5;
     
+	HttpClient mClient;
     
     /** Called when the activity is first created. */
     @Override
@@ -70,6 +79,7 @@ TextToSpeech.OnUtteranceCompletedListener {
         textForReview 			= (EditText) findViewById(R.id.EditText01);
         textForReview.setText(text);
         prefs 					= PreferenceManager.getDefaultSharedPreferences(this);
+        mSettings = this.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 		voiceEnabled = prefs.getBoolean("voice_on", false);
               
         speakButton = (Button) findViewById(R.id.button1);
@@ -226,11 +236,18 @@ TextToSpeech.OnUtteranceCompletedListener {
 		
         //Deal with selected social network
         if(networkSelected.compareTo("Twitter") == 0){
+    
         //Get login data for twitter account from prefs and log into twitter.
 //	        username = prefs.getString("t_user", null);
 	//        password = prefs.getString("t_password", null);
 	        if (username != null && password != null){
-//	          twitter = new Twitter(username, password);
+//	    
+/*	        	final DefaultOAuthProvider provider = new DefaultOAuthProvider(
+	    	            "http://twitter.com/oauth/request_token",
+	    	            "http://twitter.com/oauth/access_token",
+	    	            "http://twitter.com/oauth/authorize");
+*/	        	
+//	        twitter = new Twitter(username, password);
 //	          //Set Re-rout to identi while resolving twitter issues.
 //	          twitter.setAPIRootUrl("http://identi.ca/api");
 	        }else{
