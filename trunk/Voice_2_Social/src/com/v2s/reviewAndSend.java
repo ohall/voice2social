@@ -23,6 +23,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.FacebookError;
+import com.facebook.android.Facebook.DialogListener;
+
 public class reviewAndSend extends Activity implements TextToSpeech.OnInitListener,
 TextToSpeech.OnUtteranceCompletedListener {
 	
@@ -37,6 +42,9 @@ TextToSpeech.OnUtteranceCompletedListener {
   //  private Twitter twitter;
     private SharedPreferences prefs;
 	private Boolean 			voiceEnabled;
+	
+    public static final	String applicationId = "163165113694638";		/////////////
+    private Facebook v2sfacebook;
     
 	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
 	private static final 	String REVIEW_AND_SEND_INSTRUCTIONS 		
@@ -122,9 +130,20 @@ TextToSpeech.OnUtteranceCompletedListener {
 	    		
          }else if(networkSelected.compareTo("Facebook") == 0){
         	 
-        	 /*
-        	  * PUT CODE FOR UPDATING FACEBOOK HERE
-        	  */
+             try {
+                 String response = v2sfacebook.request("me");
+                 Bundle parameters = new Bundle();
+                 parameters.putString("message", textForReview.getText().toString());
+                 response = v2sfacebook.request("me/feed", parameters, 
+                         "POST");
+          } catch(Exception e) {
+              e.printStackTrace();
+          }	                
+          
+          /*	TO DO s
+           * we should add here some message that message was uploaded
+           * and return to other screen
+           */
         	 
          }else if(networkSelected.compareTo("Buzz") == 0){
         	 
@@ -223,11 +242,13 @@ TextToSpeech.OnUtteranceCompletedListener {
 	        }
         }else if(networkSelected.compareTo("Facebook") == 0){
         	
-        	//TODO: Implement this network, remove toast and activity launch
-        	Toast.makeText(reviewAndSend.this, 
-	        		  "Facebook not yet configured", 
-	        		  Toast.LENGTH_LONG).show();
-        	launchActivity(GOTO_MEDIA_SELECT);
+        	/*	Here we are creating new facebook variable and getting permission to post (and read also)
+        	 * 	In application there will be small facebook dialog window showing up for 2 seconds
+        	 * 	but it will disappear. If this is first time user is login in it should ask for credentials         	
+        	 */
+        	 v2sfacebook = new Facebook(applicationId);
+        	 v2sfacebook.authorize(this, new String[] {"publish_stream", "read_stream", "offline_access"},
+        	                    new AuthorizeListener());
         	
         }else if( networkSelected.compareTo("Buzz") == 0){
         	
@@ -325,5 +346,45 @@ TextToSpeech.OnUtteranceCompletedListener {
 
 		super.onDestroy();
 	}
+	
+	class AuthorizeListener implements DialogListener {
+		  public void onComplete(Bundle values) {
+		   //  Handle a successful login
+			  //try
+	            //{
+//	                Bundle parameters = new Bundle();
+//	                parameters.putString("message", textForReview.getText().toString());// the message to post to the wall
+//	                v2sfacebook.dialog(reviewAndSend.this, "stream.publish", parameters, this);// "stream.publish" is an API call
+	            //}
+	            //catch (Exception e)
+	           // {
+	                // TODO: handle exception
+	             //   System.out.println(e.getMessage());
+	           // }
+//////////////////////////////////////////////////////////////////////////////////	        	  
+	                
+	                        
+	                
+		  }
+
+		@Override
+		public void onFacebookError(FacebookError e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onError(DialogError e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onCancel() {
+			// TODO Auto-generated method stub
+			
+		}
+		}
+	
 	
 }   
