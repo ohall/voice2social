@@ -79,7 +79,7 @@ TextToSpeech.OnUtteranceCompletedListener {
         textForReview 			= (EditText) findViewById(R.id.EditText01);
         textForReview.setText(text);
         prefs 					= PreferenceManager.getDefaultSharedPreferences(this);
-        mSettings = this.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+    //    mSettings = this.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 		voiceEnabled = prefs.getBoolean("voice_on", false);
               
         speakButton = (Button) findViewById(R.id.button1);
