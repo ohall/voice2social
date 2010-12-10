@@ -1,12 +1,13 @@
 package com.v2s;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 import org.apache.http.client.HttpClient;
 
-import winterwell.jtwitter.Twitter;
-import winterwell.jtwitter.TwitterException;
+//import winterwell.jtwitter.Twitter;
+//import winterwell.jtwitter.TwitterException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +34,15 @@ import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 import com.facebook.android.Facebook.DialogListener;
 
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.http.AccessToken;
+import android.net.Uri;
+
+
 public class reviewAndSend extends Activity implements TextToSpeech.OnInitListener,
 TextToSpeech.OnUtteranceCompletedListener {
 	
@@ -43,16 +54,24 @@ TextToSpeech.OnUtteranceCompletedListener {
     private String networkSelected;
     private String username;
     private String password;
-    private Twitter twitter;
+
+    //  private Twitter twitter;
+    // twitter
+	public static final String TWITTER_CONSUMER_KEY = "VCAyWqLcWLN4CNr9yeFEMw";
+	public static final String TWITTER_CONSUMER_SECRET = "5Sj4avGxLYcNKSTw2LQjYkONeqVwA5eVRSO0uQxjBm8";
+	private static final String CALLBACK_URL = 		"myapp://oauth";
+	
+	private static final String APP = 	"OAUTH";
+	private Twitter twitter;
+	private OAuthProvider provider;
+	private CommonsHttpOAuthConsumer consumer;
+    
     private SharedPreferences prefs;
 	private Boolean 			voiceEnabled;
 	
     public static final	String applicationId = "163165113694638";		/////////////
     private Facebook v2sfacebook;
     
-    //twitter
-	public static final String TWITTER_CONSUMER_KEY = "VCAyWqLcWLN4CNr9yeFEMw";
-	public static final String TWITTER_CONSUMER_SECRET = "5Sj4avGxLYcNKSTw2LQjYkONeqVwA5eVRSO0uQxjBm8"; 
 	 
 	private static final 	int VOICE_RECOGNITION_REQUEST_CODE 	= 1234;
 	private static final 	String REVIEW_AND_SEND_INSTRUCTIONS 		
@@ -119,15 +138,60 @@ TextToSpeech.OnUtteranceCompletedListener {
      
     }
     
+
     
+	/**
+	 * As soon as the user successfully authorized the app, we are notified
+	 * here. Now we need to get the verifier from the callback URL, retrieve
+	 * token and token_secret and feed them to twitter4j (as well as
+	 * consumer key and secret).
+	 */
+	@Override
+	protected void onNewIntent(Intent intent) {
+
+		super.onNewIntent(intent);
+
+		Uri uri = intent.getData();
+		if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {
+
+			String verifier = uri.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+
+			try {
+				// this will populate token and token_secret in consumer
+				provider.retrieveAccessToken(consumer, verifier);
+				
+				// TODO: you might want to store token and token_secret in you app settings!!!!!!!!
+				AccessToken a = new AccessToken(consumer.getToken(), consumer.getTokenSecret());
+				
+				// initialize Twitter4J
+				twitter = new TwitterFactory().getInstance();
+				twitter.setOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+				twitter.setOAuthAccessToken(a);
+				
+				// ready for a tweet!
+
+				
+			} catch (Exception e) {
+				Log.e(APP, e.getMessage());
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			}
+
+		}
+	}
+
+	
+	
     private void postToNetwork(){
     	
         if(networkSelected.compareTo("Twitter") == 0){
     		//if we're in Twitter, try a twitter post
         	try{ // set twitter status, catch exceptions. 
-	              twitter.setStatus(textForReview.getText().toString());
+
+				// send the tweet
+				twitter.updateStatus(textForReview.getText().toString());
+
 	              Toast.makeText(reviewAndSend.this,"Twitter Post Success!", Toast.LENGTH_SHORT).show();
-	    		}catch(TwitterException.E401 e){
+//	    		}catch(TwitterException.E401 e){
 		          Toast.makeText(reviewAndSend.this,"Wrong Username or Password. Please check logins.", 
 		        		  Toast.LENGTH_SHORT).show();
 	    		}catch(Exception e){
@@ -244,17 +308,34 @@ TextToSpeech.OnUtteranceCompletedListener {
         //Get login data for twitter account from prefs and log into twitter.
 	        username = prefs.getString("t_user", null);
 	        password = prefs.getString("t_password", null);
-	        if (username != null && password != null){
+	        if (username != null){
 	    
-/*	        	final DefaultOAuthProvider provider = new DefaultOAuthProvider(
-	    	            "http://twitter.com/oauth/request_token",
-	    	            "http://twitter.com/oauth/access_token",
-	    	            "http://twitter.com/oauth/authorize");
-*/	        	
-	        twitter = new Twitter(username, password);
+	    	            
+	    	                /* Ask for authorization */ 
+	//private void askOAuth() {
+		try {
+			consumer = new CommonsHttpOAuthConsumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
+			provider = new DefaultOAuthProvider("http://twitter.com/oauth/request_token",
+												"http://twitter.com/oauth/access_token",
+												"http://twitter.com/oauth/authorize");
+			String authUrl = provider.retrieveRequestToken(consumer, CALLBACK_URL);
+			Toast.makeText(this, "Please authorize this app!", Toast.LENGTH_LONG).show();
+			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+		} catch (Exception e) {
+			Log.e(APP, e.getMessage());
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
+//	}
+	    	            
+	    	            
+	    	            
+        	
+//	        twitter = new Twitter(username, password);
 	          //Set Re-rout to identi while resolving twitter issues.
-	          twitter.setAPIRootUrl("http://identi.ca/api");
-	        }else{
+	//          twitter.setAPIRootUrl("http://identi.ca/api");
+	       }else{
+	    	   
+
 	        	Builder builder = new AlertDialog.Builder(this);
 	        	builder.setTitle("Set Twitter Login Info");
 	        	builder.setMessage("Please set your Twitter username and password using the menu button");
@@ -388,19 +469,19 @@ TextToSpeech.OnUtteranceCompletedListener {
 	                
 		  }
 
-		@Override
+//		@Override
 		public void onFacebookError(FacebookError e) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+//		@Override
 		public void onError(DialogError e) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+//		@Override
 		public void onCancel() {
 			// TODO Auto-generated method stub
 			
