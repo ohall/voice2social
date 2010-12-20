@@ -3,6 +3,9 @@ package com.v2s;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.io.IOException;
 
 import org.apache.http.client.HttpClient;
 
@@ -42,6 +45,21 @@ import twitter4j.TwitterFactory;
 import twitter4j.http.AccessToken;
 import android.net.Uri;
 
+import com.google.api.client.apache.ApacheHttpTransport;
+import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
+import com.google.api.client.auth.oauth.OAuthCallbackUrl;
+import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
+import com.google.api.client.auth.oauth.OAuthHmacSigner;
+import com.google.api.client.auth.oauth.OAuthParameters;
+import com.google.api.client.googleapis.GoogleTransport;
+import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetAccessToken;
+import com.google.api.client.googleapis.auth.oauth.GoogleOAuthGetTemporaryToken;
+import com.google.api.client.googleapis.json.JsonParser;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.data.sample.buzz.model.BuzzActivity;
+import com.google.api.data.sample.buzz.model.BuzzActivityFeed;
+import com.google.api.data.sample.buzz.model.BuzzObject;
+import com.google.api.data.sample.buzz.model.BuzzUrl;
 
 public class reviewAndSend extends Activity implements TextToSpeech.OnInitListener,
 TextToSpeech.OnUtteranceCompletedListener {
@@ -84,6 +102,31 @@ TextToSpeech.OnUtteranceCompletedListener {
     
 	HttpClient mClient;
     
+	private static final String SCOPE = "https://www.googleapis.com/auth/buzz";
+    private static final String APP_NAME = "v2s";
+    private static final String buzzCallback = "v2s:///";
+    private static final int CONTEXT_DELETE = 0;
+    private static final GoogleTransport transport = new GoogleTransport();
+    private static boolean isTemporary;
+    private static OAuthCredentialsResponse credentials;
+    
+    private static OAuthHmacSigner createOAuthSigner() {
+        OAuthHmacSigner result = new OAuthHmacSigner();
+        if (credentials != null) {
+          result.tokenSharedSecret = credentials.tokenSecret;
+        }
+        result.clientSharedSecret = "anonymous";
+        return result;
+      }
+
+      private static OAuthParameters createOAuthParameters() {
+        OAuthParameters authorizer = new OAuthParameters();
+        authorizer.consumerKey = "anonymous";
+        authorizer.signer = createOAuthSigner();
+        authorizer.token = credentials.token;
+        return authorizer;
+      }
+      
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,6 +219,22 @@ TextToSpeech.OnUtteranceCompletedListener {
 				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 
+		}else if (uri != null && uri.toString().startsWith(buzzCallback)){
+			
+	          OAuthCallbackUrl callbackUrl = new OAuthCallbackUrl(uri.toString());
+	          GoogleOAuthGetAccessToken accessToken = new GoogleOAuthGetAccessToken();
+	          accessToken.temporaryToken = callbackUrl.token;
+	          accessToken.verifier = callbackUrl.verifier;
+	          accessToken.signer = createOAuthSigner();
+	          accessToken.consumerKey = "anonymous";
+	          isTemporary = false;
+	          try{
+	          credentials = accessToken.execute();
+	          } catch (IOException e) {
+        	      e.printStackTrace();
+      	    }
+	          createOAuthParameters().signRequestsUsingAuthorizationHeader(
+	              transport);
 		}
 	}
 
@@ -223,10 +282,49 @@ TextToSpeech.OnUtteranceCompletedListener {
         	 
          }else if(networkSelected.compareTo("Buzz") == 0){
         	 
-        	 /*
-        	  * PUT CODE FOR UPDATING BUZZ HERE
-        	  */
-        	  
+        	 transport.applicationName = "v2s";
+        	    HttpTransport.setLowLevelHttpTransport(ApacheHttpTransport.INSTANCE);
+        	    if (BuzzUrl.DEBUG) {
+        	      Logger.getLogger("com.google.api.client").setLevel(Level.ALL);
+        	    }
+        	    try {
+        	      boolean isViewAction = Intent.ACTION_VIEW.equals(getIntent().getAction());
+        	      if (!isViewAction && (isTemporary || credentials == null)) {
+        	        GoogleOAuthGetTemporaryToken temporaryToken = new GoogleOAuthGetTemporaryToken();
+        	        temporaryToken.signer = createOAuthSigner();
+        	        temporaryToken.consumerKey = "anonymous";
+        	        temporaryToken.scope = SCOPE;
+        	        temporaryToken.displayName = APP_NAME;
+        	        temporaryToken.callback = "v2s:///";
+        	        isTemporary = true;
+        	        credentials = temporaryToken.execute();
+        	        OAuthAuthorizeTemporaryTokenUrl authorizeUrl =
+        	            new OAuthAuthorizeTemporaryTokenUrl(
+        	                "https://www.google.com/buzz/api/auth/OAuthAuthorizeToken");
+        	        authorizeUrl.set("scope", SCOPE);
+        	        authorizeUrl.set("domain", "anonymous");
+        	        authorizeUrl.set("xoauth_displayname", APP_NAME);
+        	        authorizeUrl.temporaryToken = credentials.token;
+        	        Intent webIntent = new Intent(Intent.ACTION_VIEW);
+        	        webIntent.setData(Uri.parse(authorizeUrl.build()));
+        	        startActivity(webIntent);
+        	      } else {
+        	        if (isViewAction) {
+        	         
+        	        }
+        	        transport.addParser(new JsonParser());
+        	            BuzzActivity activity = new BuzzActivity();
+        	            activity.object = new BuzzObject();
+        	            activity.object.content = textForReview.getText().toString();
+        	            try {
+        	              activity.post(transport);
+        	            } catch (IOException e) {
+        	              e.printStackTrace();
+        	            }
+        	      }
+        	    } catch (IOException e) {
+        	      e.printStackTrace();
+        	    }
          }
         
         launchActivity(GOTO_MAIN_MENU);
@@ -355,10 +453,10 @@ TextToSpeech.OnUtteranceCompletedListener {
         }else if( networkSelected.compareTo("Buzz") == 0){
         	
         	//TODO: Implement this network, remove toast and activity launch
-        	Toast.makeText(reviewAndSend.this, 
+        	/*Toast.makeText(reviewAndSend.this, 
 	        		  "Buzz not yet configured", 
 	        		  Toast.LENGTH_LONG).show();
-        	launchActivity(GOTO_MEDIA_SELECT);	
+        	launchActivity(GOTO_MEDIA_SELECT);*/	
         }
 	}
 	

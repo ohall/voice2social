@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="res"/>
+	<classpathentry excluding="drawable/" kind="src" path="res"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="libs/model"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="C:/Users/Xclusiiv3/workspace/voice2social/Voice_2_Social/libs/jtwitter.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Documents and Settings/ordep/Desktop/jtwitter.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Documents and Settings/ordep/Desktop/signpost-commonshttp4-1.2.jar" sourcepath="C:/Documents and Settings/ordep/Desktop/kaeppler-signpost-c403143"/>
+	<classpathentry exported="true" kind="lib" path="C:/Documents and Settings/ordep/Desktop/signpost-core-1.2.jar" sourcepath="C:/Documents and Settings/ordep/Desktop/kaeppler-signpost-c403143/signpost-core/src"/>
+	<classpathentry exported="true" kind="lib" path="C:/Documents and Settings/ordep/Desktop/signpost-jetty6-1.2.jar" sourcepath="C:/Documents and Settings/ordep/Desktop/kaeppler-signpost-c403143"/>
+	<classpathentry exported="true" kind="lib" path="libs/twitter4j-core-2.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-apache.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-auth-oauth.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-auth.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-escape.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-googleapis-auth-oauth.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-googleapis-auth.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-googleapis-json.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-googleapis.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-http.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-json.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-client-util.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/lib/gdata-2.2.1-alpha-data-buzz-v1.jar" sourcepath="/buzz-json-android-sample/gdata-2.2.1-alpha-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="/buzz-json-android-sample/jackson-core-asl-1.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
