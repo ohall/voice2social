@@ -1,0 +1,1 @@
+The Voice to Social (V2S) application for Android is designed to allow users to post to multiple social networks via voice. V2S will prompt users to input their login info for 3 social networking applications. Twitter, Facebook and Google Buzz. V2S will then allow users to post to these applications using speech recognition technology.
